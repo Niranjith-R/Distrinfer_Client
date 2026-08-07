@@ -55,6 +55,9 @@
     for (const file of details.files) {
       const node = await buildTreeNode(file);
       treeNodes = [...treeNodes, node];
+      for (const child of node.children) {
+        runPrompt(child.label, child.id);
+      }
     }
   }
 
@@ -122,6 +125,11 @@
    */
   function handlePromptClick(node) {
     selectedPromptNodeId = node.id;
+    userPrompt = '';
+    result = null;
+    error = null;
+    polling = false;
+    loading = false;
     const existing = promptResults[node.id];
     if (!existing || existing.status === 'idle' || existing.status === 'error') {
       runPrompt(node.label, node.id);
@@ -231,7 +239,8 @@
          {#if result}
           <div class="flex justify-start">
             <div class="bg-[#2d2f3d] text-white rounded-2xl rounded-bl-md px-4 py-2 max-w-[70%]">
-              {result?.Data?.infered ?? JSON.stringify(result)}
+              <span class="text-gray-400 text-xs">Host: {result?.Data?.host ?? 'unknown'}</span>
+              <span class="block mt-1">{result?.Data?.infered ?? JSON.stringify(result)}</span>
             </div>
           </div>
         {/if}

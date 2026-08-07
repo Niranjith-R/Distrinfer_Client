@@ -31,26 +31,37 @@
     Click a prompt in the sidebar to view details.
   </div>
 {:else}
-  <div class="max-w-2xl mx-auto mb-6 space-y-3">
-    <div class="p-4 bg-[#2d2f3d] rounded-xl">
-      <h3 class="text-xs text-gray-400 mb-1">Prompt</h3>
-      <pre class="text-sm text-white whitespace-pre-wrap break-words">{selectedNode.label}</pre>
+  <div class="max-w-2xl mx-auto mb-6 space-y-4">
+    <!-- User prompt bubble -->
+    <div class="flex justify-end">
+      <div class="bg-[#3a3f5c] text-white rounded-2xl rounded-br-md px-4 py-2 max-w-[70%] text-sm">
+        {selectedNode.label}
+      </div>
     </div>
 
+    <!-- Result bubble -->
     {#if result?.status === 'pending' || result?.status === 'polling'}
-      <div class="p-4 bg-[#2d2f3d] rounded-xl flex items-center gap-3 text-sm text-white">
-        <span class="animate-spin">⏳</span>
-        <span>{result.status === 'pending' ? 'Sending...' : 'Polling...'}</span>
+      <div class="flex justify-start">
+        <div class="bg-[#2d2f3d] text-white rounded-2xl rounded-bl-md px-4 py-3 max-w-[70%] flex items-center gap-3 text-sm">
+          <div class="dot-loader">
+            <span class="dot-loader_dot"></span>
+            <span class="dot-loader_dot"></span>
+            <span class="dot-loader_dot"></span>
+          </div>
+        </div>
       </div>
     {:else if result?.status === 'error'}
-      <div class="p-4 bg-[#2d2f3d] rounded-xl">
-        <h3 class="text-xs text-red-400 mb-1">Error</h3>
-        <p class="text-sm text-red-300">{result.error}</p>
+      <div class="flex justify-start">
+        <div class="bg-[#2d2f3d] text-red-300 rounded-2xl rounded-bl-md px-4 py-2 max-w-[70%] text-sm">
+          {result.error}
+        </div>
       </div>
     {:else if result?.status === 'completed'}
-      <div class="p-4 bg-[#2d2f3d] rounded-xl">
-        <h3 class="text-xs text-gray-400 mb-1">Result</h3>
-        <pre class="text-sm text-white whitespace-pre-wrap break-words">{JSON.stringify(result.data, null, 2)}</pre>
+      <div class="flex justify-start">
+        <div class="bg-[#2d2f3d] text-white rounded-2xl rounded-bl-md px-4 py-2 max-w-[70%] text-sm">
+          <span class="text-gray-400 text-xs">Host: {result.data?.Data?.host ?? 'unknown'}</span>
+          <span class="block mt-1">{result.data?.Data?.infered ?? JSON.stringify(result.data)}</span>
+        </div>
       </div>
     {/if}
   </div>
