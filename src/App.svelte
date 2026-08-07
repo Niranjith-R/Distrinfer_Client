@@ -253,30 +253,30 @@
         {/if}
       </div>
     </div>
+    <div class="">
+        <FileUpload
+        accept=".txt"
+        maxFiles={Infinity}
+        bind:acceptedFiles
+        onFileAccept={handleFileAccept}
+        >
+        <FileUpload.Dropzone>
+            <FileUpload.Trigger />
+            <FileUpload.HiddenInput />
+        </FileUpload.Dropzone>
+        <FileUpload.ItemGroup>
+            {#each acceptedFiles as file (file.name)}
+                <FileUpload.Item {file}>
+                <FileUpload.ItemName />
+                <FileUpload.ItemSizeText />
+                <FileUpload.ItemDeleteTrigger />
+                </FileUpload.Item>
+            {/each}
 
-    <FileUpload
-      accept=".txt"
-      maxFiles={Infinity}
-      bind:acceptedFiles
-      onFileAccept={handleFileAccept}
-    >
-	<FileUpload.Dropzone>
-		<FileUpload.Trigger />
-		<FileUpload.HiddenInput />
-	</FileUpload.Dropzone>
-	<FileUpload.ItemGroup>
-        {#each acceptedFiles as file (file.name)}
-            <FileUpload.Item {file}>
-            <FileUpload.ItemName />
-            <FileUpload.ItemSizeText />
-            <FileUpload.ItemDeleteTrigger />
-            </FileUpload.Item>
-        {/each}
-
-	</FileUpload.ItemGroup>
-	<FileUpload.ClearTrigger />
-</FileUpload>
-
+        </FileUpload.ItemGroup>
+        <FileUpload.ClearTrigger />
+    </FileUpload>
+    </div>
     <div class="flex items-center gap-2 mt-auto">
       <input
         type="text"
