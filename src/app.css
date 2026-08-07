@@ -2,4 +2,28 @@
 
 @import '@skeletonlabs/skeleton'; 
 @import '@skeletonlabs/skeleton-svelte'; 
-@import '@skeletonlabs/skeleton/themes/cerberus'; 
+@import '@skeletonlabs/skeleton/themes/cerberus';
+
+.dot-loader {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-content: center;
+}
+
+.dot-loader_dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: dot-bounce 1.4s ease-in-out both infinite;
+  animation-fill-mode: both;
+}
+
+.dot-loader_dot:nth-child(1) { animation-delay: -0.32s; }
+.dot-loader_dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+} 

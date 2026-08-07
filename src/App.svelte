@@ -6,6 +6,7 @@
 
   let prompt = $state('');
   let loading = $state(false);
+  let polling = $state(false);
   let error = $state(/** @type {string | null} */ (null));
   let result = $state(/** @type {any | null} */ (null));
   let userPrompt = $state('');
@@ -29,12 +30,14 @@
          const data = await res.json();
         const promptId = data.hash;
 
-        userPrompt = prompt;
-        prompt = '';
-        await pollForResult(promptId);
-    } catch (err) {
+         userPrompt = prompt;
+         prompt = '';
+         polling = true;
+         await pollForResult(promptId);
+     } catch (err) {
         error = /** @type {Error} */ (err).message;
         loading = false;
+        polling = false;
     }
     }
 
@@ -52,10 +55,12 @@
          } else {
          result = data;
          loading = false;
+         polling = false;
          }
     } catch (err) {
         error = /** @type {Error} */ (err).message;
         loading = false;
+        polling = false;
     }
     };
 
@@ -75,17 +80,13 @@
     <div class="flex-1 overflow-y-auto">
 
 
-        <div class="flex items-center gap-2">
-
+        <div class="flex items-center gap-2 mt-auto">
             <input
             type="text"
             class="input rounded-full mb-15"
             placeholder="API Endpoint"
             bind:value={API_BASE}
-            disabled={loading}
-            onkeydown={(e) => e.key === 'Enter' && sendPrompt()}
         />
-
         </div>
 
       <div class="max-w-2xl mx-auto space-y-4">
@@ -97,10 +98,22 @@
           </div>
         {/if}
 
-        {#if result}
+         {#if result}
           <div class="flex justify-start">
             <div class="bg-[#2d2f3d] text-white rounded-2xl rounded-bl-md px-4 py-2 max-w-[70%]">
               {result?.Data?.infered ?? JSON.stringify(result)}
+            </div>
+          </div>
+        {/if}
+
+        {#if polling}
+          <div class="flex justify-start">
+            <div class="bg-[#2d2f3d] text-white rounded-2xl rounded-bl-md px-4 py-3 max-w-[70%]">
+              <div class="dot-loader">
+                <span class="dot-loader_dot"></span>
+                <span class="dot-loader_dot"></span>
+                <span class="dot-loader_dot"></span>
+              </div>
             </div>
           </div>
         {/if}
