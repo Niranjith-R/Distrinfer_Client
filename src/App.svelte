@@ -1,0 +1,103 @@
+<script>
+  import { ArrowRight } from '@lucide/svelte';
+
+  const API_BASE = 'http://127.0.0.1:8000'; // replace with your actual host
+//   const API_KEY = 'YOUR_API_KEY'; // replace with your actual key
+
+  let prompt = $state('');
+  let loading = $state(false);
+  let error = $state(null);
+  let result = $state(null);
+
+
+
+    async function sendPrompt() {
+    if (!prompt.trim() || loading) return;
+
+    loading = true;
+    error = null;
+    result = null;
+
+    try {
+        const res = await fetch(`${API_BASE}/query`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+        });
+
+        const data = await res.json();
+        const promptId = data.hash; // <-- was data.prompt_id
+
+        prompt = '';
+        await pollForResult(promptId);
+    } catch (err) {
+        error = err.message;
+        loading = false;
+    }
+    }
+
+  async function pollForResult(promptId) {
+    const POLL_INTERVAL = 1500; // ms between polls
+
+   const poll = async () => {
+    try {
+        const res = await fetch(`${API_BASE}/query/${promptId}`);
+        const data = await res.json();
+
+        if (data.data.status === 'Pending' || data.data.status === 'Processing') {
+        setTimeout(poll, POLL_INTERVAL);
+        } else {
+        result = data;
+        loading = false;
+        }
+    } catch (err) {
+        error = err.message;
+        loading = false;
+    }
+    };
+
+    poll();
+  }
+</script>
+
+<div class="flex">
+  <div class="bg-[#272935] w-85 h-screen flex flex-col text-white">
+    <div class="flex flex-col items-center font-['monoton'] text-5xl pt-20 pb-20">
+      DISTRINFER
+    </div>
+    <hr class="hr" />
+  </div>
+
+  <div class="flex-1 p-6 flex flex-col h-screen">
+    {#if result}
+      <div class="p-4">
+        <p>{result.response ?? JSON.stringify(result)}</p>
+      </div>
+    {/if}
+
+    {#if error}
+      <p class="text-red-400 text-sm">{error}</p>
+    {/if}
+
+    <div class="flex items-center gap-2 mt-auto">
+      <input
+        type="text"
+        class="input rounded-full"
+        placeholder="Type here..."
+        bind:value={prompt}
+        disabled={loading}
+        onkeydown={(e) => e.key === 'Enter' && sendPrompt()}
+      />
+      <button
+        type="button"
+        class="btn-icon btn-icon-xl preset-filled rounded-full"
+        title="Go"
+        aria-label="Go"
+        onclick={sendPrompt}
+        disabled={loading}
+      >
+        <ArrowRight class="w-5 h-5" />
+      </button>
+    </div>
+  </div>
+</div>
