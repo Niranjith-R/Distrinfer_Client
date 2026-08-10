@@ -27,9 +27,9 @@
 </script>
 
 {#if !selectedNode}
-  <div class="max-w-2xl mx-auto mb-6 p-4 bg-[#2d2f3d] rounded-xl text-gray-400 text-sm">
-    Click a prompt in the sidebar to view details.
-  </div>
+  <!-- <div class="max-w-2xl mx-auto mb-6 p-4 bg-[#2d2f3d] rounded-xl text-gray-400 text-sm"> -->
+    <!-- Click a prompt in the sidebar to view details. -->
+  <!-- </div> -->
 {:else}
   <div class="max-w-2xl mx-auto mb-6 space-y-4">
     <!-- User prompt bubble -->
