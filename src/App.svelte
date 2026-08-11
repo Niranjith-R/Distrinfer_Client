@@ -194,7 +194,9 @@
 <div class="flex">
   <div class="bg-[#272935] w-85 h-screen flex flex-col text-white">
     <div class="flex flex-col items-center font-['monoton'] text-5xl pt-20 pb-20">
-      DISTRINFER
+      <a href="/">
+        DISTRINFER
+      </a>
     </div>
     <hr class="hr" />
     <div class="flex-1 overflow-y-auto px-2 py-2 space-y-1">
