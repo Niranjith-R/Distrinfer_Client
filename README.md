@@ -75,4 +75,4 @@ The client communicates with the Distinfer backend at two endpoints:
 
 ## License
 
-MIT — see the [LICENSE](LICENSE) file.
+GPL 3.0 — see the [LICENSE](LICENSE) file.
