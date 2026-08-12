@@ -1,43 +1,78 @@
-# Svelte + Vite
+# Distrinfer Client
 
-This template should help get you started developing with Svelte in Vite.
+A Svelte + Vite frontend for [Distrinfer](https://github.com/niranjithr/Distrinfer) — an open-source distributed inference platform. Upload prompt files, send queries to the inference backend, and view results in a dark-themed interface.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+- **File Upload** — Upload `.txt` files containing one prompt per line. Each line is parsed into an individual prompt node.
+- **Prompt Tree** — Prompts are organized in a collapsible sidebar tree, with per-prompt status indicators (idle, pending, polling, completed, error).
+- **Real-time Polling** — Submitted prompts are polled until the backend returns a result.
+- **Chat UI** — Interact with the inference backend via a conversational interface.
+- **Skeleton + Tailwind CSS** — Styled with the Skeleton design system.
 
-## Need an official Svelte framework?
+## Requirements
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+- Node.js 20+
+- A running Distinfer backend (default: `http://127.0.0.1:8000`)
 
-## Technical considerations
+## Setup
 
-**Why use this over SvelteKit?**
-
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+```bash
+git clone https://github.com/niranjithr/Distrinfer-client.git
+cd Distrinfer-client/Distrinfer
+npm install
 ```
+
+### Configure the API Endpoint
+
+The client defaults to `http://127.0.0.1:8000`. Edit `src/App.svelte` to change the `API_BASE` value, or override it at runtime via the input field in the UI.
+
+## Development
+
+```bash
+npm run dev
+```
+
+Opens [http://localhost:5173](http://localhost:5173) in your browser.
+
+## Build
+
+```bash
+npm run build
+```
+
+Outputs static files to `dist/` for deployment.
+
+## Preview
+
+```bash
+npm run preview
+```
+
+Serves the production build locally for preview.
+
+## Project Structure
+
+```
+src/
+├── App.svelte              # Root component: sidebar + main chat area
+├── main.js                 # Svelte mount entry point
+├── app.css                 # Tailwind imports + Skeleton theme + custom styles
+└── lib/
+    ├── TreeNode.svelte     # Collapsible tree node with prompt status dots
+    ├── PromptDetail.svelte # Detail view for a selected prompt result
+    └── Counter.svelte      # Placeholder demo component
+```
+
+## API
+
+The client communicates with the Distinfer backend at two endpoints:
+
+| Method | Endpoint         | Purpose                          |
+|--------|------------------|----------------------------------|
+| POST   | `/query`         | Submit a prompt, receive a hash  |
+| GET    | `/query/{hash}`  | Poll for result by hash          |
+
+## License
+
+MIT — see the [LICENSE](LICENSE) file.
